@@ -1,2 +1,3 @@
-- name: Update Homebrew Formula
-  uses: naijabx/update-formula-homebrew-action@v1.1
+name: Update Formula
+  - name: Update Homebrew Formula
+    uses: naijabx/update-formula-homebrew-action@v1.1
