@@ -7,6 +7,11 @@ class Networkprofiles < Formula
   version "v0.0.4"
 
   def install
-    bin.install "NetworkProfiles"
+    prefix.install "NetworkProfiles.app"
+    bin.write_exec_script "#{prefix}/NetworkProfiles.app/Contents/MacOS/NetworkProfiles"
+  end
+
+  def post_install
+    system "ln", "-sf", "#{prefix}/NetworkProfiles.app", "/Applications/NetworkProfiles.app"
   end
 end
