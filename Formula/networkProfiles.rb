@@ -1,12 +1,12 @@
-class Network-profiles < Formula
+class Networkprofiles < Formula
   desc ""
   homepage "https://github.com/PanterSoft/network-profiles"
-  url "https://github.com/PanterSoft/network-profiles/releases/download/v0.0.1/network-profiles-v0.0.1.tar.gz"
-  sha256 "188beb3e6a0d581cad0a6f1eac695e512ad5e13611ec0c1ff032d947d68af043"
+  url "https://github.com/PanterSoft/network-profiles/releases/download/v0.0.2/network-profiles-v0.0.2.tar.gz"
+  sha256 "d735c2c41232f9e3beea6059dedc16ab69c448f5d0e767c6b5809378dfca1138"
   license "MIT"
-  version "v0.0.1"
+  version "v0.0.2"
 
   def install
-    bin.install "network-profiles"
+    bin.install "networkProfiles"
   end
 end
