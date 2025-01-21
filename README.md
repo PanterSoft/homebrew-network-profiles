@@ -11,5 +11,5 @@
 ### Applications inside this tap
 | Build Passed    | Name            | Description                  |
 |-----------------|-----------------|------------------------------|
-| [ ] | NetworkProfiles | Manage network profiles inside your Menue Bar      |
-| [ x ] | rpiboot         | Boot Raspberry Pi over USB (https://github.com/raspberrypi/usbboot)  |
+| - [ ] | NetworkProfiles | Manage network profiles inside your Menue Bar      |
+| - [x] | rpiboot         | Boot Raspberry Pi over USB (https://github.com/raspberrypi/usbboot)  |
