@@ -21,7 +21,7 @@ class Rpiboot < Formula
   def caveats
     <<~EOS
       To run rpiboot, you may need to use sudo:
-        sudo rpiboot
+        sudo rpiboot -d mass-storage-gadget64
     EOS
   end
 
