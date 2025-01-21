@@ -10,11 +10,6 @@ class Rpiboot < Formula
   depends_on "libusb"
   depends_on "pkg-config"
 
-  def fetch
-    ohai "Fetching rpiboot"
-    super
-  end
-
   def install
     system "git", "clone", "--recurse-submodules", "--shallow-submodules", "--depth=1", "https://github.com/raspberrypi/usbboot", "usbboot"
     cd "usbboot" do
