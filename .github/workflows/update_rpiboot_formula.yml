@@ -1,4 +1,4 @@
-name: Update Formula
+name: Update rpiboot Formula
 
 on:
   push:
@@ -9,28 +9,29 @@ on:
 
 jobs:
   update-formula:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Get latest release tag
         id: latest_tag
-        run: |
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)
-          if [ -z "$LATEST_RELEASE" ]; then
-            echo "No releases found"
-            exit 1
-          fi
-          echo "::set-output name=tag::$LATEST_RELEASE"
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
 
       - name: Get SHA256 checksum
         id: shasum
         run: |
-          ARCHIVE_URL="https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz"
-          SHA256=$(curl -L $ARCHIVE_URL | sha256sum | awk '{ print $1 }')
-          echo "::set-output name=sha::$SHA256"
+          wget https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz
+          echo ::set-output name=sha::"$(sha256sum ./${{ steps.latest_tag.outputs.tag }}.tar.gz | awk '{print $1}')"
+
+      - name: Verify Homebrew Token
+        run: |
+          if [ -z "${{ secrets.BREW_TOKEN_TAP }}" ]; then
+            echo "BREW_TOKEN_TAP is not set"
+            exit 1
+          fi
 
       - name: Update rpiboot homebrew formula
         uses: naijabx/update-formula-homebrew-action@v1.1
