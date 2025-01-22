@@ -38,7 +38,7 @@ jobs:
           fi
 
       - name: Update rpiboot homebrew formula
-        uses: naijabx/update-formula-homebrew-action@v1.1
+        uses: PanterSoft/update-formula-homebrew-action@master #naijabx/update-formula-homebrew-action@v1.1
         with:
           repo: raspberrypi/usbboot
           tap: PanterSoft/homebrew-pantersoft
