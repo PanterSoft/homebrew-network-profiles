@@ -1,21 +1,16 @@
 class Rpiboot < Formula
   desc "Tool to boot Raspberry Pi devices over USB"
   homepage "https://github.com/raspberrypi/usbboot"
-  url "https://github.com/raspberrypi/usbboot.git",
-      :using => :git,
-      :revision => "HEAD",
-      :shallow => false
+  url "https://github.com/raspberrypi/usbboot/archive/refs/tags/20221215-105525.tar.gz"
   version "1.0.0"
+  sha256 "<SHA256_CHECKSUM>"
 
   depends_on "libusb"
   depends_on "pkg-config"
 
   def install
-    system "git", "clone", "--recurse-submodules", "--shallow-submodules", "--depth=1", "https://github.com/raspberrypi/usbboot", "usbboot"
-    cd "usbboot" do
-      system "make"
-      bin.install "rpiboot"
-    end
+    system "make"
+    bin.install "rpiboot"
   end
 
   def caveats

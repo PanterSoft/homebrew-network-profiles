@@ -1,0 +1,35 @@
+name: Update Formula
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'  # Run every Sunday at midnight
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt-get install -y jq
+
+      - name: Get latest release and SHA256
+        run: |
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)
+          ARCHIVE_URL="https://github.com/raspberrypi/usbboot/archive/refs/tags/${LATEST_RELEASE}.tar.gz"
+          SHA256=$(curl -L $ARCHIVE_URL | sha256sum | awk '{ print $1 }')
+          sed -i "s|url \".*\"|url \"$ARCHIVE_URL\"|" ${{ github.workspace }}/Formula/rpiboot.rb
+          sed -i "s|sha256 \".*\"|sha256 \"$SHA256\"|" ${{ github.workspace }}/Formula/rpiboot.rb
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ github.workspace }}/Formula/rpiboot.rb
+          git commit -m "Update rpiboot formula to latest release"
+          git push
