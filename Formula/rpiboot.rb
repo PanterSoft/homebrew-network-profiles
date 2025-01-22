@@ -6,12 +6,12 @@ class Rpiboot < Formula
   license "Apache-2.0"
   version "20221215-105525"
 
+  depends_on "libusb"
+  depends_on "pkg-config"
+
   def install
-    tarball_dir = Dir["*usbboot*"].first
-    cd tarball_dir do
-      system "make"
-      bin.install "rpiboot"
-    end
+    system "make"
+    bin.install "rpiboot"
   end
 
   def caveats
