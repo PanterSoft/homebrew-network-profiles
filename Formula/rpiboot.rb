@@ -11,8 +11,11 @@ class Rpiboot < Formula
   depends_on "pkg-config"
 
   def install
-    system "make"
-    bin.install "rpiboot"
+    tarball_dir = Dir["*usbboot*"].first
+    cd tarball_dir do
+      system "make"
+      bin.install "rpiboot"
+    end
   end
 
   def caveats
