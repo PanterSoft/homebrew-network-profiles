@@ -7,6 +7,21 @@ class Rpiboot < Formula
   version "20221215-105525"
 
   def install
-    bin.install "rpiboot"
+    tarball_dir = Dir["*usbboot*"].first
+    cd tarball_dir do
+      system "make"
+      bin.install "rpiboot"
+    end
+  end
+
+  def caveats
+    <<~EOS
+      To run rpiboot, you may need to use sudo:
+        sudo rpiboot -d mass-storage-gadget64
+    EOS
+  end
+
+  test do
+    system "#{bin}/rpiboot", "--help"
   end
 end
