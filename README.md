@@ -1,7 +1,5 @@
 # homebrew-pantersoft
 
-
-
 ### Installation Tap
 1. Tap the repository:
     ```sh
