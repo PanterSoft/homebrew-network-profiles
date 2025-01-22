@@ -9,8 +9,13 @@ class Rpiboot < Formula
   depends_on "pkg-config"
 
   def install
-    system "make"
-    bin.install "rpiboot"
+    tarball = Dir["*usbboot-#{version}.tar.gz"].first
+    system "tar", "-xzf", tarball
+    mv "usbboot-#{version}", "usbboot"
+    cd "usbboot" do
+      system "make"
+      bin.install "rpiboot"
+    end
   end
 
   def caveats

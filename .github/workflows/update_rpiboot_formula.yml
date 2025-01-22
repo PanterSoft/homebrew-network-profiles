@@ -47,6 +47,6 @@ jobs:
           formula: Formula/rpiboot.rb
           download-url: https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz
           sha256: ${{ steps.shasum.outputs.sha }}
-          commit-message: update rpiboot formula
+          commit-message: updated rpiboot formula
         env:
           COMMIT_TOKEN: ${{ secrets.BREW_TOKEN_TAP }}
