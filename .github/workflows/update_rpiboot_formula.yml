@@ -17,11 +17,20 @@ jobs:
 
       - name: Get latest release tag
         id: latest_tag
-        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)"
+        run: |
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)
+          if [ -z "$LATEST_RELEASE" ]; then
+            echo "No releases found"
+            exit 1
+          fi
+          echo "::set-output name=tag::$LATEST_RELEASE"
 
       - name: Get SHA256 checksum
         id: shasum
-        run: echo "::set-output name=sha::$(curl -L https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz | sha256sum | awk '{ print $1 }')"
+        run: |
+          ARCHIVE_URL="https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz"
+          SHA256=$(curl -L $ARCHIVE_URL | sha256sum | awk '{ print $1 }')
+          echo "::set-output name=sha::$SHA256"
 
       - name: Update rpiboot homebrew formula
         uses: naijabx/update-formula-homebrew-action@v1.1
