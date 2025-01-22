@@ -15,23 +15,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: sudo apt-get install -y jq
+      - name: Get latest release tag
+        id: latest_tag
+        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)"
 
-      - name: Get latest release and SHA256
-        run: |
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)
-          ARCHIVE_URL="https://github.com/raspberrypi/usbboot/archive/refs/tags/${LATEST_RELEASE}.tar.gz"
-          SHA256=$(curl -L $ARCHIVE_URL | sha256sum | awk '{ print $1 }')
-          sed -i "s|url \".*\"|url \"$ARCHIVE_URL\"|" ${{ github.workspace }}/Formula/rpiboot.rb
-          sed -i "s|sha256 \".*\"|sha256 \"$SHA256\"|" ${{ github.workspace }}/Formula/rpiboot.rb
+      - name: Get SHA256 checksum
+        id: shasum
+        run: echo "::set-output name=sha::$(curl -L https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz | sha256sum | awk '{ print $1 }')"
 
-      - name: Commit and push changes
+      - name: Update rpiboot homebrew formula
+        uses: naijabx/update-formula-homebrew-action@v1.1
+        with:
+          repo: PanterSoft/homebrew-pantersoft
+          tap: PanterSoft/homebrew-pantersoft
+          formula: Formula/rpiboot.rb
+          download-url: https://github.com/raspberrypi/usbboot/archive/refs/tags/${{ steps.latest_tag.outputs.tag }}.tar.gz
+          sha256: ${{ steps.shasum.outputs.sha }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${{ github.workspace }}/Formula/rpiboot.rb
-          git commit -m "Update rpiboot formula to latest release"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/PanterSoft/homebrew-pantersoft.git"
+          COMMIT_TOKEN: ${{ secrets.BREW_TOKEN_TAP }}
