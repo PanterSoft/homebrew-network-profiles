@@ -18,7 +18,13 @@ jobs:
 
       - name: Get latest release tag
         id: latest_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        run: |
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/raspberrypi/usbboot/releases/latest | jq -r .tag_name)
+          if [ -z "$LATEST_RELEASE" ]; then
+            echo "No releases found"
+            exit 1
+          fi
+          echo "::set-output name=tag::$LATEST_RELEASE"
 
       - name: Get SHA256 checksum
         id: shasum
